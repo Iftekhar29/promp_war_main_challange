@@ -944,3 +944,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
   });
 });
+
+// Expose controller interface globally for automated testing and browser console debugging
+window.MindMateController = {
+  state,
+  loadState,
+  saveState,
+  calculateWellnessScore,
+  getScoreCategory,
+  checkEmergencyCondition,
+  updateDashboardMetrics,
+  renderHistoryLog,
+  deleteEntry
+};

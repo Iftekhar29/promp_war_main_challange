@@ -4,6 +4,30 @@ This document defines the quality assurance and test checklist protocols to veri
 
 ---
 
+## 🚀 How to Run Automated Unit Tests
+
+You can run automated unit tests in two ways depending on your system environment:
+
+### Method 1: Interactive Browser Diagnostics (No Dependencies)
+1. Open the [index.html](file:///f:/main_challange/index.html) file directly in your web browser.
+2. Click the **Settings** gear button in the top-right corner.
+3. Click the **Run Diagnostics Unit Tests** button.
+4. The diagnostic logs will render directly on your screen inside a green-text code box, asserting all sanitization, scoring, classification, and alert logic.
+
+### Method 2: Node.js CLI (Requires Node/npm)
+1. Navigate to the project directory in your terminal: `f:\main_challange`.
+2. Run the command:
+   ```bash
+   node test.js
+   ```
+   *Alternatively, if npm is configured:*
+   ```bash
+   npm test
+   ```
+3. The results will output directly in your console with detailed pass/fail counts.
+
+---
+
 ## 1. Unit Test Cases
 
 ### 1.1 Mood and Parameter Score Mapping

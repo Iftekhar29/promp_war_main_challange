@@ -1,0 +1,10 @@
+{
+  "name": "mindmate-wellness-tracker",
+  "version": "1.0.0",
+  "description": "Student Mental Wellness Tracker",
+  "main": "script.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "private": true
+}
