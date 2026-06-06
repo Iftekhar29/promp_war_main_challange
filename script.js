@@ -630,6 +630,31 @@ function updateEmergencySection() {
 // --- Event Handlers & Submission Flow ---
 
 /**
+ * Validate daily check-in input parameters
+ */
+function validateFormInputs(data) {
+  const mood = data.mood;
+  const energy = data.energy;
+  const confidence = data.confidence;
+  const studyHours = Number(data.studyHours);
+  const sleepHours = Number(data.sleepHours);
+
+  if (!mood || !energy || !confidence) {
+    return { valid: false, message: 'Please fill out all daily mood and energy check-in criteria.' };
+  }
+
+  if (isNaN(studyHours) || studyHours < 0 || studyHours > 24) {
+    return { valid: false, message: 'Study completed hours must be between 0 and 24.' };
+  }
+
+  if (isNaN(sleepHours) || sleepHours < 0 || sleepHours > 24) {
+    return { valid: false, message: 'Sleep duration hours must be between 0 and 24.' };
+  }
+
+  return { valid: true, message: 'Success' };
+}
+
+/**
  * Process new check-in and journal submission
  */
 function handleCheckInSubmit(event) {
@@ -637,22 +662,19 @@ function handleCheckInSubmit(event) {
 
   const form = event.target;
   
-  // Validation
+  // Collect inputs
   const mood = form.mood.value;
   const energy = form.energy.value;
   const confidence = form.confidence.value;
-  const studyHours = Number(form.studyHours.value);
-  const sleepHours = Number(form.sleepHours.value);
-  const waterIntake = Number(form.waterIntake.value);
+  const studyHours = form.studyHours.value;
+  const sleepHours = form.sleepHours.value;
+  const waterIntake = Number(form.waterIntake.value) || 0;
   const examType = form.examType.value;
 
-  if (!mood || !energy || !confidence) {
-    alert('Please fill out all daily mood and energy check-in criteria.');
-    return;
-  }
-
-  if (studyHours < 0 || studyHours > 24 || sleepHours < 0 || sleepHours > 24) {
-    alert('Hours completed must be between 0 and 24.');
+  // Perform validation
+  const validation = validateFormInputs({ mood, energy, confidence, studyHours, sleepHours });
+  if (!validation.valid) {
+    alert(validation.message);
     return;
   }
 
@@ -955,5 +977,6 @@ window.MindMateController = {
   checkEmergencyCondition,
   updateDashboardMetrics,
   renderHistoryLog,
-  deleteEntry
+  deleteEntry,
+  validateFormInputs
 };

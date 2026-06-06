@@ -169,6 +169,18 @@ controller.state.entries = [
 ];
 assert(controller.checkEmergencyCondition() === true, 'Triggers warning for 3 consecutive days of Stressed/Overwhelmed');
 
+// Test 4.6: Form Validation
+console.log('\n[6] Testing Form Validation:');
+const validate = window.MindMateController.validateFormInputs;
+assert(validate({ mood: '', energy: 'High', confidence: 'High' }).valid === false, 'Fails when mood is empty');
+assert(validate({ mood: 'Good', energy: '', confidence: 'High' }).valid === false, 'Fails when energy is empty');
+assert(validate({ mood: 'Good', energy: 'High', confidence: '' }).valid === false, 'Fails when confidence is empty');
+assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: -1 }).valid === false, 'Fails when studyHours is negative');
+assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 25 }).valid === false, 'Fails when studyHours > 24');
+assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: -1 }).valid === false, 'Fails when sleepHours is negative');
+assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: 25 }).valid === false, 'Fails when sleepHours > 24');
+assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: 7 }).valid === true, 'Passes when all inputs are correct');
+
 console.log('\n====================================');
 console.log(`Unit Tests Summary: Passed ${passCount} | Failed ${failCount}`);
 console.log('====================================');

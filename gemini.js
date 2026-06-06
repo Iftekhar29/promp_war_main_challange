@@ -35,10 +35,11 @@ function clearApiKey() {
  */
 function sanitizeInput(str) {
   if (typeof str !== 'string') return '';
-  // Replace HTML brackets to prevent XSS
-  let cleaned = str.replace(/[<>]/g, '');
+  // Replace HTML brackets to prevent XSS, and remove <script> tags
+  let cleaned = str.replace(/<script[^>]*>/gi, '');
+  cleaned = cleaned.replace(/[<>]/g, '');
   // Remove common prompt injection phrases and override directives
-  cleaned = cleaned.replace(/(system prompt|ignore previous instructions|instead of|you must now|change instructions|system instruction|override)/gi, '');
+  cleaned = cleaned.replace(/(system prompt|ignore previous|instead of|you must now|change instructions|system instruction|override)/gi, '');
   // Limit input length to prevent payload bloat or DOS
   return cleaned.trim().substring(0, 600);
 }

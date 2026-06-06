@@ -92,6 +92,17 @@ function runBrowserTests() {
     // Restore state
     controller.state.entries = originalEntries;
 
+    outputEl.textContent += '\n--- [6] Form Validation Tests ---\n';
+    const validate = window.MindMateController.validateFormInputs;
+    assert(validate({ mood: '', energy: 'High', confidence: 'High' }).valid === false, 'Fails when mood is empty');
+    assert(validate({ mood: 'Good', energy: '', confidence: 'High' }).valid === false, 'Fails when energy is empty');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: '' }).valid === false, 'Fails when confidence is empty');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: -1 }).valid === false, 'Fails when studyHours is negative');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 25 }).valid === false, 'Fails when studyHours > 24');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: -1 }).valid === false, 'Fails when sleepHours is negative');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: 25 }).valid === false, 'Fails when sleepHours > 24');
+    assert(validate({ mood: 'Good', energy: 'High', confidence: 'High', studyHours: 8, sleepHours: 7 }).valid === true, 'Passes when all inputs are correct');
+
     outputEl.textContent += `\n====================================\n`;
     outputEl.textContent += `Test Execution Complete!\n`;
     outputEl.textContent += `Passed: ${passCount} | Failed: ${failCount}\n`;
