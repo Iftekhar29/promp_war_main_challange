@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMate - Student Mental Wellness Tracker</title>
+  <meta name="description" content="A premium student mental wellness tracker for competitive exam aspirants. Track mood, manage stress triggers, log reflections, and receive personalized Gemini AI coaching.">
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Preconnect & load premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Screen Reader Announcements -->
+  <div id="sr-announcer" class="sr-only" aria-live="polite"></div>
+
+  <!-- Header Section -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon" aria-hidden="true">🧠</span>
+        <h1 class="logo-text">MindMate</h1>
+      </div>
+      <div class="header-actions">
+        <button id="btn-toggle-settings" class="btn btn-secondary" aria-haspopup="true" aria-expanded="false" aria-label="Toggle API Settings">
+          <span class="btn-icon" aria-hidden="true">⚙️</span> Settings
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Configuration Drawer/Card (Hidden by default) -->
+  <div id="api-settings-panel" class="settings-panel hidden" aria-label="API Configuration Dashboard">
+    <div class="panel-inner glass-card">
+      <h2 class="section-title-sm">Gemini API Configuration</h2>
+      <p class="panel-desc">To get personalized AI coaching suggestions, enter your Gemini Developer API Key below. Your key is stored securely in your browser's LocalStorage and is never shared.</p>
+      
+      <div class="form-group">
+        <label for="gemini-key-input">Gemini API Key</label>
+        <input type="password" id="gemini-key-input" placeholder="AIzaSy..." class="form-control" autocomplete="off">
+        <small id="key-status-message" class="status-warning" aria-live="polite">Checking key configuration status...</small>
+      </div>
+      
+      <div class="panel-actions">
+        <button id="btn-save-key" class="btn btn-primary">Save API Key</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    
+    <!-- Hero / Intro Section -->
+    <section class="section-hero" aria-labelledby="hero-title">
+      <div class="hero-inner glass-card">
+        <div class="hero-text-content">
+          <h2 id="hero-title" class="hero-title">Your Companion Through Exam Preparation</h2>
+          <p class="hero-subtitle">Preparing for NEET, JEE, UPSC, Board Exams, or GATE is a mental marathon. MindMate helps you track your wellness, identify burnout signs, and build resilient study habits.</p>
+          <div class="disclaimer-alert" role="note">
+            <span class="alert-icon" aria-hidden="true">⚠️</span>
+            <span class="alert-text"><strong>Medical Disclaimer:</strong> This tool provides wellness guidance and is not a substitute for professional mental health care.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emergency Support Alert Banner (Dynamically shown) -->
+    <section id="emergency-support-section" class="emergency-section hidden" aria-live="assertive" aria-hidden="true" aria-labelledby="emergency-title">
+      <div class="emergency-inner card-danger animate-pulse">
+        <div class="emergency-header">
+          <span class="emergency-icon" aria-hidden="true">🚨</span>
+          <h2 id="emergency-title" class="emergency-headline">Emergency Wellness Alert</h2>
+        </div>
+        <p class="emergency-message">We've noticed you have reported high stress, fatigue, or overwhelm across recent days. Your well-being is more important than any test score.</p>
+        <p class="emergency-recommendation"><strong>Consider speaking with a trusted friend, family member, teacher, counselor, or mental health professional.</strong></p>
+        <div class="emergency-buttons">
+          <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" class="btn btn-light">Find Free Helpline Support</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="dashboard-grid">
+      
+      <!-- Section 2: Mood & Metrics Check-in Form -->
+      <section class="grid-col-form" aria-labelledby="form-section-title">
+        <div class="glass-card fade-in">
+          <h2 id="form-section-title" class="section-title">Daily Wellness Check-In</h2>
+          <p class="section-subtitle">Log your metrics and triggers to generate your daily wellness profile.</p>
+
+          <form id="check-in-form" novalidate>
+            
+            <div class="form-row">
+              <!-- Exam Type Selector -->
+              <div class="form-group">
+                <label for="exam-select">Exam Preparing For</label>
+                <select id="exam-select" name="examType" class="form-control" required>
+                  <option value="JEE">JEE</option>
+                  <option value="NEET">NEET</option>
+                  <option value="UPSC">UPSC</option>
+                  <option value="CAT">CAT</option>
+                  <option value="GATE">GATE</option>
+                  <option value="CUET">CUET</option>
+                  <option value="Board Exams">Board Exams</option>
+                  <option value="General Exams">Other / General Study</option>
+                </select>
+              </div>
+
+              <!-- Mood Selection -->
+              <div class="form-group">
+                <label for="mood-select">Current Mood</label>
+                <select id="mood-select" name="mood" class="form-control" required>
+                  <option value="" disabled selected>Select mood...</option>
+                  <option value="Excellent">Excellent 😊</option>
+                  <option value="Good">Good 🙂</option>
+                  <option value="Neutral">Neutral 😐</option>
+                  <option value="Stressed">Stressed 😰</option>
+                  <option value="Overwhelmed">Overwhelmed 😫</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <!-- Energy Level -->
+              <div class="form-group">
+                <label for="energy-select">Energy Level</label>
+                <select id="energy-select" name="energy" class="form-control" required>
+                  <option value="" disabled selected>Select energy...</option>
+                  <option value="High">High ⚡</option>
+                  <option value="Medium">Medium 🔋</option>
+                  <option value="Low">Low 🪫</option>
+                </select>
+              </div>
+
+              <!-- Confidence Level -->
+              <div class="form-group">
+                <label for="confidence-select">Confidence Level</label>
+                <select id="confidence-select" name="confidence" class="form-control" required>
+                  <option value="" disabled selected>Select confidence...</option>
+                  <option value="High">High 💪</option>
+                  <option value="Medium">Medium ✊</option>
+                  <option value="Low">Low 😟</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-three">
+              <!-- Study Hours -->
+              <div class="form-group">
+                <label for="study-hours">Study Completed</label>
+                <input type="number" id="study-hours" name="studyHours" class="form-control" min="0" max="24" placeholder="Hours" required>
+              </div>
+
+              <!-- Sleep Hours -->
+              <div class="form-group">
+                <label for="sleep-hours">Sleep Duration</label>
+                <input type="number" id="sleep-hours" name="sleepHours" class="form-control" min="0" max="24" placeholder="Hours" required>
+              </div>
+
+              <!-- Water Intake -->
+              <div class="form-group">
+                <label for="water-intake">Water Intake</label>
+                <input type="number" id="water-intake" name="waterIntake" class="form-control" min="0" max="50" placeholder="Cups" required>
+              </div>
+            </div>
+
+            <!-- Stress Trigger Section -->
+            <fieldset class="form-fieldset">
+              <legend class="fieldset-legend">Stress Triggers (Select all that apply)</legend>
+              <div id="triggers-checkbox-container" class="checkbox-grid">
+                <!-- Checkboxes populated by script.js -->
+              </div>
+              
+              <!-- Custom Trigger Addition -->
+              <div class="custom-trigger-area">
+                <label for="custom-trigger-input" class="sr-only">Add Custom Trigger</label>
+                <input type="text" id="custom-trigger-input" placeholder="Other stress factor..." class="form-control-sm">
+                <button type="button" id="btn-add-custom-trigger" class="btn btn-secondary btn-sm">Add Trigger</button>
+              </div>
+            </fieldset>
+
+            <!-- Reflection Journal Area -->
+            <fieldset class="form-fieldset">
+              <legend class="fieldset-legend">Daily Reflection Journal</legend>
+              
+              <div class="form-group">
+                <label for="journal-went-well">What went well today?</label>
+                <textarea id="journal-went-well" name="wentWell" class="form-control" rows="2" placeholder="Tasks done, good interactions, topics covered..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="journal-challenges">What challenged you today?</label>
+                <textarea id="journal-challenges" name="challenges" class="form-control" rows="2" placeholder="Difficult problems, distractions, procrastination..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="journal-proud-of">What is one thing you are proud of?</label>
+                <textarea id="journal-proud-of" name="proudOf" class="form-control" rows="2" placeholder="Overcoming hesitation, sitting through a test, breathing..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="journal-improve">What will you improve tomorrow?</label>
+                <textarea id="journal-improve" name="improveTomorrow" class="form-control" rows="2" placeholder="Better time bounds, active recall, sleep schedules..."></textarea>
+              </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary btn-block">Save Check-In & Update Dashboard</button>
+            <div id="form-success-alert" class="success-alert hidden" role="alert">
+              <span aria-hidden="true">✅</span> Check-in recorded and dashboard updated!
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Section 5: Wellness Dashboard -->
+      <section id="wellness-dashboard" class="grid-col-dashboard" aria-labelledby="dashboard-title">
+        <div class="glass-card">
+          <h2 id="dashboard-title" class="section-title">Wellness Dashboard</h2>
+          <p class="section-subtitle">Real-time indicators based on your historical check-in data.</p>
+
+          <!-- Empty State -->
+          <div id="dashboard-empty-state" class="dashboard-empty-state">
+            <span class="empty-icon" aria-hidden="true">📊</span>
+            <p>Your charts and logs will show up here as soon as you record your first daily check-in!</p>
+          </div>
+
+          <!-- Dashboard Metrics Area -->
+          <div id="dashboard-metrics-container" class="dashboard-metrics hidden">
+            
+            <div class="metrics-summary-row">
+              <!-- Radial Dial For Latest Wellness Score -->
+              <div class="score-radial-widget">
+                <svg width="120" height="120" viewBox="0 0 120 120" aria-label="Wellness score visualization">
+                  <circle cx="60" cy="60" r="54" class="svg-ring-bg"></circle>
+                  <circle id="dashboard-score-ring" cx="60" cy="60" r="54" class="svg-ring-fill"></circle>
+                </svg>
+                <div class="score-overlay">
+                  <span id="dashboard-score-number" class="score-value">0</span>
+                  <span class="score-label">Score</span>
+                </div>
+                <div class="badge-container">
+                  <span id="dashboard-score-status" class="dashboard-badge">Calculating</span>
+                </div>
+              </div>
+
+              <!-- Quick details -->
+              <div class="averages-container">
+                <h3 class="card-label">Preparation Averages</h3>
+                <div class="average-item">
+                  <span class="avg-icon" aria-hidden="true">💤</span>
+                  <div>
+                    <span class="avg-label">Avg Sleep</span>
+                    <span id="avg-sleep-value" class="avg-val">0 hours</span>
+                  </div>
+                </div>
+                <div class="average-item">
+                  <span class="avg-icon" aria-hidden="true">📚</span>
+                  <div>
+                    <span class="avg-label">Avg Study</span>
+                    <span id="avg-study-value" class="avg-val">0 hours</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Canvas Trend Charts Grid -->
+            <div class="charts-grid">
+              <div class="chart-wrapper">
+                <h3 class="chart-title">Wellness Score Trend</h3>
+                <canvas id="wellness-trend-canvas" class="trend-canvas"></canvas>
+              </div>
+
+              <div class="chart-wrapper">
+                <h3 class="chart-title">Confidence Trend</h3>
+                <canvas id="confidence-trend-canvas" class="trend-canvas"></canvas>
+              </div>
+
+              <div class="chart-wrapper grid-span-full">
+                <h3 class="chart-title">Study vs. Sleep Balance</h3>
+                <div class="chart-legend">
+                  <span class="legend-dot bg-study"></span> Study Hours
+                  <span class="legend-dot bg-sleep"></span> Sleep Hours
+                </div>
+                <canvas id="sleep-study-canvas" class="trend-canvas"></canvas>
+              </div>
+            </div>
+
+            <!-- Frequent Triggers Ranking -->
+            <div class="triggers-frequency-section">
+              <h3 class="chart-title">Most Frequent Stressors</h3>
+              <ul id="frequent-triggers-list" class="frequent-triggers-list">
+                <!-- Loaded dynamically -->
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Section 6: AI Coach Section -->
+    <section class="section-ai-coach" aria-labelledby="ai-coach-title">
+      <div class="glass-card">
+        <div class="ai-header-layout">
+          <div class="ai-title-group">
+            <span class="ai-badge">Gemini Powered</span>
+            <h2 id="ai-coach-title" class="section-title">MindMate AI Wellness Coach</h2>
+          </div>
+          <button id="btn-consult-coach" class="btn btn-gradient">
+            <span class="btn-icon" aria-hidden="true">✨</span> Consult AI Coach
+          </button>
+        </div>
+        <p class="section-subtitle">Get custom feedback, study-life balance advice, and stress-reduction tips based on your latest check-in metrics.</p>
+
+        <!-- Loader -->
+        <div id="coach-loader" class="coach-loader-container hidden">
+          <div class="spinner" aria-hidden="true"></div>
+          <p class="loader-text">Analyzing metrics and consulting Gemini AI coach...</p>
+        </div>
+
+        <!-- Connection Error Display -->
+        <div id="coach-error-container" class="coach-error-box hidden" role="alert">
+          <span class="error-icon" aria-hidden="true">⚠️</span>
+          <div class="error-msg-content">
+            <h3 class="error-title">AI Coach Communication Issue</h3>
+            <p class="error-msg-text">Failed to contact the coaching API. Please double-check your API key inside Settings.</p>
+          </div>
+        </div>
+
+        <!-- AI Response Cards Layout -->
+        <div id="coach-response-container" class="coach-response hidden">
+          
+          <div class="ai-response-hero">
+            <div class="ai-score-summary">
+              <div class="ai-score-pill">
+                <span class="ai-score-label">AI Assessment Score</span>
+                <span id="ai-score-number" class="ai-score-num">0</span>
+              </div>
+              <div class="ai-risk-pill">
+                <span class="ai-score-label">Risk Level</span>
+                <span id="ai-risk-badge" class="dashboard-badge">Normal</span>
+              </div>
+            </div>
+            
+            <div class="ai-encouragement-card">
+              <h3 class="ai-card-title">Encouragement</h3>
+              <p id="ai-encouragement" class="ai-text">Analyzing your check-in...</p>
+            </div>
+          </div>
+
+          <div class="ai-details-grid">
+            <div class="ai-card">
+              <h3 class="ai-card-title text-color-purple">✨ Exam Support: Study & Time Planning</h3>
+              <ul id="ai-recs-list" class="ai-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+            <div class="ai-card">
+              <h3 class="ai-card-title text-color-teal">🍃 Stress Reduction Techniques</h3>
+              <ul id="ai-tips-list" class="ai-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+          </div>
+
+          <div class="ai-motivation-banner">
+            <span class="quote-quote" aria-hidden="true">“</span>
+            <p id="ai-quote" class="ai-quote-text">Your speed doesn't matter, forward is forward.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- History Log Table -->
+    <section class="section-history" aria-labelledby="history-title">
+      <div class="glass-card overflow-x">
+        <h2 id="history-title" class="section-title">Check-in Logs</h2>
+        <p class="section-subtitle">Review, monitor, and delete your past daily logs.</p>
+        
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Exam</th>
+              <th scope="col">Mood</th>
+              <th scope="col">Hours</th>
+              <th scope="col">Wellness Score</th>
+              <th scope="col">Top Triggers</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="history-log-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 7: General Support Resources -->
+    <section class="section-resources" aria-labelledby="resources-title">
+      <div class="glass-card">
+        <h2 id="resources-title" class="section-title">Self-Care & Student Support Resources</h2>
+        <p class="section-subtitle">Quick techniques and links to keep you grounded during exam preparation.</p>
+        
+        <div class="resources-grid">
+          
+          <article class="resource-card">
+            <h3 class="resource-card-title">💨 The 4-7-8 Breathing Technique</h3>
+            <p class="resource-desc">A natural tranquilizer for the nervous system to quickly reduce panic and performance anxiety.</p>
+            <ol class="resource-steps">
+              <li>Inhale quietly through your nose for <strong>4 seconds</strong>.</li>
+              <li>Hold your breath for a count of <strong>7 seconds</strong>.</li>
+              <li>Exhale completely through your mouth making a whoosh sound for <strong>8 seconds</strong>.</li>
+              <li>Repeat the cycle 4 times during intense stress spikes.</li>
+            </ol>
+          </article>
+
+          <article class="resource-card">
+            <h3 class="resource-card-title">🎯 The Pomodoro Study Technique</h3>
+            <p class="resource-desc">Helps combat study fatigue and prevents time management burnout.</p>
+            <ul class="resource-steps">
+              <li>Choose a single topic to focus on.</li>
+              <li>Set a timer for <strong>25 minutes</strong> and study with zero distractions.</li>
+              <li>Take a <strong>5-minute active break</strong> (walk, stretch, hydrate).</li>
+              <li>Every 4 pomodoros, take a longer <strong>20-30 minute break</strong> to recharge.</li>
+            </ul>
+          </article>
+
+          <article class="resource-card">
+            <h3 class="resource-card-title">🤝 Seeking Professional Counseling</h3>
+            <p class="resource-desc">If academic pressure feels too heavy, you don't have to carry it alone. Talking to a therapist or counselor is a sign of strength.</p>
+            <p class="resource-desc">Find completely confidential and free national student helplines on international directories like:</p>
+            <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">Visit Find A Helpline</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>© 2026 MindMate. Empowering student wellness during exam seasons.</p>
+      <p class="footer-disclaimer">MindMate is a self-reflection wellness tracker and does not diagnose mental health conditions or replace professional therapy.</p>
+    </div>
+  </footer>
+
+  <!-- App Main Modules loaded in correct order to avoid ESM CORS policies -->
+  <script src="config.js"></script>
+  <script src="gemini.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
