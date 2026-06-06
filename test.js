@@ -137,6 +137,26 @@ const burnoutEntry = {
 };
 assert(calc(burnoutEntry) === 18, 'Computes score of 18 for critical burnout metrics');
 
+// Moderate case: Mood Neutral (60), Sleep 6h (70), Energy Medium (70), Confidence Medium (70), Triggers 2 (70)
+const moderateEntry = {
+  mood: 'Neutral',
+  sleepHours: 6,
+  energy: 'Medium',
+  confidence: 'Medium',
+  triggers: ['A', 'B']
+};
+assert(calc(moderateEntry) === 68, 'Computes score of 68 for moderate risk metrics');
+
+// High stress case: Mood Stressed (35), Sleep 5h (50), Energy Low (30), Confidence Medium (70), Triggers 3 (40)
+const highStressEntry = {
+  mood: 'Stressed',
+  sleepHours: 5,
+  energy: 'Low',
+  confidence: 'Medium',
+  triggers: ['A', 'B', 'C']
+};
+assert(calc(highStressEntry) === 44, 'Computes score of 44 for high stress metrics');
+
 // Test 4.4: Score Category Assignment
 console.log('\n[4] Testing Score Categories:');
 const getCategory = window.MindMateController.getScoreCategory;

@@ -65,6 +65,24 @@ function runBrowserTests() {
     };
     assert(calc(burnoutEntry) === 18, 'Computes score of 18 for critical burnout metrics');
 
+    const moderateEntry = {
+      mood: 'Neutral',
+      sleepHours: 6,
+      energy: 'Medium',
+      confidence: 'Medium',
+      triggers: ['A', 'B']
+    };
+    assert(calc(moderateEntry) === 68, 'Computes score of 68 for moderate risk metrics');
+
+    const highStressEntry = {
+      mood: 'Stressed',
+      sleepHours: 5,
+      energy: 'Low',
+      confidence: 'Medium',
+      triggers: ['A', 'B', 'C']
+    };
+    assert(calc(highStressEntry) === 44, 'Computes score of 44 for high stress metrics');
+
     outputEl.textContent += '\n--- [4] Score Status Categorization Tests ---\n';
     assert(getCategory(100).label === 'Healthy', '100 is Healthy');
     assert(getCategory(70).label === 'Healthy', '70 is Healthy');
@@ -107,6 +125,11 @@ function runBrowserTests() {
     outputEl.textContent += `Test Execution Complete!\n`;
     outputEl.textContent += `Passed: ${passCount} | Failed: ${failCount}\n`;
     outputEl.textContent += `====================================\n`;
+
+    const announcer = document.getElementById('sr-announcer');
+    if (announcer) {
+      announcer.textContent = `Diagnostic unit tests complete. Passed: ${passCount}, Failed: ${failCount}.`;
+    }
 
   } catch (error) {
     outputEl.textContent += `\n❌ CRITICAL EXCEPTION: ${error.message}\n`;

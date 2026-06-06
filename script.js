@@ -437,7 +437,7 @@ function updateFrequentTriggersList() {
   const listEl = document.getElementById('frequent-triggers-list');
   if (!listEl) return;
 
-  listEl.innerHTML = ''; // Safe to clear since we re-append clean textContent elements
+  listEl.textContent = ''; // Safe to clear since we re-append clean textContent elements
 
   const frequencies = {};
   state.entries.forEach(e => {
@@ -496,7 +496,7 @@ function renderHistoryLog() {
   const tbody = document.getElementById('history-log-body');
   if (!tbody) return;
 
-  tbody.innerHTML = ''; // Safe to clear
+  tbody.textContent = ''; // Safe to clear
 
   if (state.entries.length === 0) {
     const tr = document.createElement('tr');
@@ -583,7 +583,7 @@ function renderTriggerCheckboxes() {
   const container = document.getElementById('triggers-checkbox-container');
   if (!container) return;
 
-  container.innerHTML = ''; // Safe to clear
+  container.textContent = ''; // Safe to clear
 
   const allTriggers = [...DEFAULT_TRIGGERS, ...state.customTriggers];
 
@@ -740,6 +740,10 @@ function handleCheckInSubmit(event) {
   const successAlert = document.getElementById('form-success-alert');
   if (successAlert) {
     successAlert.classList.remove('hidden');
+    const announcer = document.getElementById('sr-announcer');
+    if (announcer) {
+      announcer.textContent = 'Daily check-in recorded successfully and wellness dashboard updated.';
+    }
     setTimeout(() => {
       successAlert.classList.add('hidden');
     }, 4000);
@@ -860,7 +864,7 @@ function renderCoachingResponse(data) {
 
   // Clear lists safely
   if (tipsList) {
-    tipsList.innerHTML = '';
+    tipsList.textContent = '';
     data.stressManagementTips.forEach(tip => {
       const li = document.createElement('li');
       li.textContent = tip;
@@ -869,7 +873,7 @@ function renderCoachingResponse(data) {
   }
 
   if (recsList) {
-    recsList.innerHTML = '';
+    recsList.textContent = '';
     data.studyRecommendations.forEach(rec => {
       const li = document.createElement('li');
       li.textContent = rec;
